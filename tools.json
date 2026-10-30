@@ -1,0 +1,1372 @@
+{
+  "tools": [
+    {
+      "name": "integrationList",
+      "title": "List connected channels",
+      "description": "List the social media channels connected to the workspace (pages, profiles and accounts) with each channel's platform, name, status, character limit and remaining posting capacity. Each channel has two ids: `integrationId` (number), used when creating posts, and `id` (uuid string), used for channel filters, brand voice lookups and channel helpers.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "description": "Page number, from 1",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "limit": {
+            "description": "Channels per page (1-100)",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "List connected channels",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "integrationSchema",
+      "title": "Get platform posting rules",
+      "description": "Get the posting rules of a social platform: character limits, supported media, and the per-post settings schema of a connected channel on that platform.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "platform": {
+            "type": "string",
+            "description": "Platform identifier, as in a connected channel's `platform` field (e.g. instagram, linkedin)"
+          }
+        },
+        "required": [
+          "platform"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Get platform posting rules",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "listPinterestBoards",
+      "title": "List Pinterest boards",
+      "description": "List the boards of a connected Pinterest channel, with each board's id and name. A Pinterest post needs a board id.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Channel id (uuid string) of a connected Pinterest channel, not its numeric integrationId"
+          }
+        },
+        "required": [
+          "channelId"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "List Pinterest boards",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "createPinterestBoard",
+      "title": "Create a Pinterest board",
+      "description": "Create a new board on a connected Pinterest account. The board is public unless privacy is SECRET. Returns the new board's id and name.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Channel id (uuid string) of a connected Pinterest channel, not its numeric integrationId"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 180,
+            "description": "Board name"
+          },
+          "description": {
+            "description": "Board description",
+            "type": "string",
+            "maxLength": 500
+          },
+          "privacy": {
+            "description": "PUBLIC (default) or SECRET",
+            "type": "string",
+            "enum": [
+              "PUBLIC",
+              "SECRET"
+            ]
+          }
+        },
+        "required": [
+          "channelId",
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Create a Pinterest board",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "listWordPressPostTypes",
+      "title": "List WordPress post types",
+      "description": "List the post types (such as post and page) available on a connected WordPress site.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Channel id (uuid string) of a connected WordPress channel, not its numeric integrationId"
+          }
+        },
+        "required": [
+          "channelId"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "List WordPress post types",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "listWordPressCategories",
+      "title": "List WordPress categories",
+      "description": "List the categories of a connected WordPress site, with each category's id and name.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Channel id (uuid string) of a connected WordPress channel, not its numeric integrationId"
+          }
+        },
+        "required": [
+          "channelId"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "List WordPress categories",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "listWordPressTags",
+      "title": "List WordPress tags",
+      "description": "List the tags of a connected WordPress site, with each tag's id and name.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Channel id (uuid string) of a connected WordPress channel, not its numeric integrationId"
+          }
+        },
+        "required": [
+          "channelId"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "List WordPress tags",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "listSlackChannels",
+      "title": "List Slack channels",
+      "description": "List the channels of a connected Slack workspace, with each channel's id and name. A Slack post needs the id of the channel to post in.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Channel id (uuid string) of a connected Slack channel, not its numeric integrationId"
+          }
+        },
+        "required": [
+          "channelId"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "List Slack channels",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "listDiscordChannels",
+      "title": "List Discord channels",
+      "description": "List the channels of a connected Discord server, with each channel's id and name. A Discord post needs the id of the channel to post in.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Channel id (uuid string) of a connected Discord channel, not its numeric integrationId"
+          }
+        },
+        "required": [
+          "channelId"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "List Discord channels",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "schedulePost",
+      "title": "Create a draft or schedule a post",
+      "description": "Create a social media post on a connected channel, as a draft or scheduled for a future time. Platforms: Bluesky, Discord, Dribbble, Facebook, Google Business Profile, Instagram, LinkedIn, Mastodon, Pinterest, Slack, Telegram, Threads, X (Twitter), WordPress and YouTube. With integrationIds (2 or more channels) the same post is created on each channel as one post group: RepeatPost shows, edits, deletes and publishes the group as one, sends one confirmation for it, and the result is { postGroupUuid, posts }. Per-channel settings then go in settingsByIntegration. type \"schedule\" needs scheduledFor, an ISO 8601 UTC time in the future; past times are refused. This tool does not publish immediately. An identical repeated request returns the existing post instead of a duplicate; a different clientRef creates a separate post. The channel's approval rules apply, so a scheduled post can come back as PENDING_APPROVAL instead of SCHEDULED. Attached images are converted, cropped or compressed per channel to a file type, shape and size the channel accepts; the result lists what changed in mediaFitted.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "integrationId": {
+            "description": "Numeric integrationId of one connected channel. Send this or integrationIds, not both.",
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "integrationIds": {
+            "description": "Numeric integrationIds of 2 or more connected channels, for the same post on each (one post group). Send this or integrationId, not both.",
+            "minItems": 2,
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          },
+          "content": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Post text"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "schedule"
+            ],
+            "description": "draft saves the post unscheduled; schedule publishes it at scheduledFor"
+          },
+          "scheduledFor": {
+            "description": "ISO 8601 UTC datetime in the future; required for type \"schedule\"",
+            "type": "string"
+          },
+          "mediaUrls": {
+            "description": "Public URLs of images or videos to attach, e.g. media library URLs",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "settings": {
+            "description": "Per-post settings for the channel's platform, as defined by its settings schema. __type is set from the channel and ignored here. One channel only; with integrationIds use settingsByIntegration.",
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "settingsByIntegration": {
+            "description": "With integrationIds: per-post settings for each channel, keyed by its integrationId, e.g. {\"12\": {...}}. A channel without an entry gets none. __type is ignored.",
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          },
+          "requiresApproval": {
+            "description": "Route the post through approval; a scheduled post then waits for an approver",
+            "type": "boolean"
+          },
+          "approverIds": {
+            "description": "Workspace user ids who approve this post; required when requiresApproval is true and type is \"schedule\". Not used for drafts.",
+            "minItems": 1,
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "clientRef": {
+            "description": "Idempotency key (letters, digits, . _ : -; max 120). Without one, an identical retry is recognised automatically.",
+            "type": "string",
+            "pattern": "^[A-Za-z0-9._:-]{1,120}$"
+          }
+        },
+        "required": [
+          "content",
+          "type"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Create a draft or schedule a post",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "listPosts",
+      "title": "List posts",
+      "description": "List the workspace's social media posts across all connected channels, optionally filtered by status, channel and date range. Post text is cut to 280 characters in this list; each post carries its uuid. Posts that share a postGroupUuid are one post created for several channels at once, listed one row per channel; the postGroupUuid filter lists only that group.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "description": "DRAFT, SCHEDULED, PUBLISHING, PUBLISHED, PENDING_APPROVAL, FAILED, DECLINED or CANCELLED",
+            "type": "string"
+          },
+          "accountUuid": {
+            "description": "Channel id (uuid string) of a connected channel; only its posts are listed",
+            "type": "string"
+          },
+          "postGroupUuid": {
+            "description": "Only the posts of this post group: one post sent to several channels",
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "startDate": {
+            "description": "ISO 8601 date or datetime, e.g. 2026-10-01 or 2026-10-01T00:00:00Z",
+            "type": "string"
+          },
+          "endDate": {
+            "description": "ISO 8601 date or datetime (inclusive end of the range)",
+            "type": "string"
+          },
+          "page": {
+            "description": "Page number, from 1",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "limit": {
+            "description": "Posts per page (1-100)",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "List posts",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "getPost",
+      "title": "Get a post",
+      "description": "Get one social media post by uuid: its full content, channel and platform, schedule time and status. A postGroupUuid means the post was created for several channels at once and this is one channel's copy of it.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "postUuid": {
+            "type": "string",
+            "description": "Post uuid"
+          }
+        },
+        "required": [
+          "postUuid"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Get a post",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "updatePost",
+      "title": "Edit, reschedule or publish a post",
+      "description": "Edit a draft or scheduled social media post by uuid: its content, media, schedule time, tags or status. Changes one channel's post only: posts created together for several channels share a postGroupUuid, and each is edited separately. Only the fields sent are changed. Published and publishing posts cannot be edited. type sets the status: \"draft\" moves it to drafts, \"schedule\" (re)schedules it at scheduledFor (ISO 8601 UTC, required), and \"now\" publishes it to the platform immediately, which cannot be undone. When the channel requires approval, the post goes to PENDING_APPROVAL instead of publishing.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "postUuid": {
+            "type": "string",
+            "description": "Post uuid"
+          },
+          "content": {
+            "description": "New post text",
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "description": "New status: draft, schedule, or now to publish immediately",
+            "type": "string",
+            "enum": [
+              "draft",
+              "schedule",
+              "now"
+            ]
+          },
+          "scheduledFor": {
+            "description": "ISO 8601 UTC datetime, required when type is \"schedule\"",
+            "type": "string"
+          },
+          "mediaUrls": {
+            "description": "Public URLs of the images or videos the post carries",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "tags": {
+            "description": "Workspace tag ids to set on the post; [] clears all tags",
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          }
+        },
+        "required": [
+          "postUuid"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Edit, reschedule or publish a post",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "deletePost",
+      "title": "Delete a post",
+      "description": "Delete a draft, scheduled or published social media post by uuid; the workspace role has to allow deletion. Deletes one channel's post only: posts created together for several channels share a postGroupUuid, and the rest of that group is unaffected. By default the post is removed from RepeatPost only and stays live on the social platform. With deleteOnPlatform true it is also deleted on the platform, which removes the real post and its engagement and cannot be undone.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "postUuid": {
+            "type": "string",
+            "description": "Post uuid"
+          },
+          "deleteOnPlatform": {
+            "description": "Also delete the post on the social platform. Irreversible, and OWNER-only: an ADMIN still gets the local delete, and remote.outcome reports that the platform half was skipped. Defaults to false.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "postUuid"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Delete a post",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "getPostGroup",
+      "title": "Get a post group",
+      "description": "Get a post group: one post sent to several channels at once. Lists each channel's post with its status, schedule time and whether it can still be edited (editable, readOnlyReason).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "postGroupUuid": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+            "description": "Post group uuid: the postGroupUuid of any post in the group"
+          }
+        },
+        "required": [
+          "postGroupUuid"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Get a post group",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "deletePostGroup",
+      "title": "Delete the unpublished posts of a post group",
+      "description": "Delete every unpublished post of a post group (drafts, scheduled, failed and waiting-for-approval posts on each channel) from RepeatPost. Published posts are kept and nothing is deleted on the social platforms. Channel access decides, not the workspace role: posts on channels with full access or approval access are deleted, posts on view-only channels are kept (NO_PERMISSION). The result lists each post as deleted or kept, with the reason a post was kept.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "postGroupUuid": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+            "description": "Post group uuid: the postGroupUuid of any post in the group"
+          }
+        },
+        "required": [
+          "postGroupUuid"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Delete the unpublished posts of a post group",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "publishPostGroup",
+      "title": "Publish a post group now",
+      "description": "Publish a post group now: its scheduled and failed posts go out on every channel together, which cannot be undone. Drafts are included only with includeDrafts true, for a group that was saved as drafts. Posts waiting for approval, already published, or on channels the person cannot publish to are skipped, each with a reason. A published result means the post has started; each channel's outcome follows as a notification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "postGroupUuid": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+            "description": "Post group uuid: the postGroupUuid of any post in the group"
+          },
+          "includeDrafts": {
+            "description": "Also publish the group's drafts. Defaults to false.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "postGroupUuid"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Publish a post group now",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "retryPostGroup",
+      "title": "Requeue the failed posts of a post group",
+      "description": "Put every failed post of a post group back in the queue; nothing is published at this point. Each post keeps its own time if that is still ahead; otherwise it goes at scheduledFor, or two hours from now without it.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "postGroupUuid": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+            "description": "Post group uuid: the postGroupUuid of any post in the group"
+          },
+          "scheduledFor": {
+            "description": "ISO 8601 UTC datetime in the future, for failed posts whose own time has passed",
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          }
+        },
+        "required": [
+          "postGroupUuid"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Requeue the failed posts of a post group",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "mediaList",
+      "title": "Search the media library",
+      "description": "Search files across the whole workspace media library, in every folder, by name, type and favourite status. Each file includes its public `url`, usable as post media, and its storage `path`.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "description": "Page number, from 1",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "offset": {
+            "description": "Files per page (1-100)",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "type": {
+            "description": "File type, e.g. image or video",
+            "type": "string"
+          },
+          "favorite": {
+            "description": "true lists favourites only",
+            "type": "boolean"
+          },
+          "q": {
+            "description": "Search by file name",
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Search the media library",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "mediaBrowse",
+      "title": "Browse media folders",
+      "description": "Browse the media library one folder at a time: the folders and files directly inside a folder, or inside the root when folderId is omitted. File entries include `url`, usable as post media, and `path`, the storage key used when deleting.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "folderId": {
+            "description": "Folder to browse; omit for the root level",
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "page": {
+            "description": "Page number, from 1",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "offset": {
+            "description": "Files per page (1-100)",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "type": {
+            "description": "File type filter",
+            "type": "string",
+            "enum": [
+              "all",
+              "image",
+              "video",
+              "document"
+            ]
+          },
+          "favorite": {
+            "description": "Favourite filter",
+            "type": "string",
+            "enum": [
+              "all",
+              "favorite",
+              "unfavorite"
+            ]
+          },
+          "q": {
+            "description": "Search by name or caption",
+            "type": "string",
+            "maxLength": 255
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Browse media folders",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "mediaUpload",
+      "title": "Upload media",
+      "description": "Upload a file to the workspace media library, either from a public URL (images, GIFs and short videos; videos up to 100 MB) or from base64 data (small files). Returns the new file's id, public url (usable as post media), storage path, type and size.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "description": "Public URL of an image, GIF or short video (videos up to 100 MB) to import; exclusive with base64",
+            "type": "string",
+            "format": "uri"
+          },
+          "base64": {
+            "description": "Raw base64 file data; exclusive with url",
+            "type": "string"
+          },
+          "mimeType": {
+            "description": "MIME type of the base64 data, e.g. image/png; required with base64",
+            "type": "string"
+          },
+          "fileName": {
+            "description": "File name, e.g. my-image.png; required with base64",
+            "type": "string"
+          },
+          "folderId": {
+            "description": "Media library folder id; the root folder when omitted",
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "name": {
+            "description": "Display name in the media library",
+            "type": "string"
+          },
+          "caption": {
+            "description": "Caption stored with the file",
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Upload media",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "folderCreate",
+      "title": "Create a media folder",
+      "description": "Create a folder in the media library, at the root or inside parentId. Fails when a folder with the same name already exists there.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "Folder name"
+          },
+          "parentId": {
+            "description": "Parent folder id; the root when omitted",
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Create a media folder",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "mediaRename",
+      "title": "Rename media or a folder",
+      "description": "Rename a media file or folder. Files can get a new name, caption or both; folders only have a name.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "entity": {
+            "type": "string",
+            "enum": [
+              "file",
+              "folder"
+            ],
+            "description": "Whether id is a file or a folder"
+          },
+          "id": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991,
+            "description": "File or folder id"
+          },
+          "name": {
+            "description": "New name",
+            "type": "string",
+            "maxLength": 255
+          },
+          "caption": {
+            "description": "New caption, files only; null clears it",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "entity",
+          "id"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Rename media or a folder",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "mediaMove",
+      "title": "Move media or folders",
+      "description": "Move media files and folders into a target folder (targetFolderId, or null for the root). A folder cannot be moved into itself.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "entities": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "entity": {
+                  "type": "string",
+                  "enum": [
+                    "file",
+                    "folder"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "entity"
+              ]
+            },
+            "description": "Files and folders to move"
+          },
+          "targetFolderId": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Destination folder id; null moves to the root"
+          }
+        },
+        "required": [
+          "entities",
+          "targetFolderId"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Move media or folders",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "mediaDelete",
+      "title": "Delete media or folders",
+      "description": "Delete media files and folders. Deleting a folder deletes everything inside it. Each file entry carries its storage `path` so the stored object is removed as well.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "entities": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "entity": {
+                  "type": "string",
+                  "enum": [
+                    "file",
+                    "folder"
+                  ]
+                },
+                "path": {
+                  "description": "Storage path of the file (its `path` in library listings); required for files",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "entity"
+              ]
+            },
+            "description": "Files and folders to delete"
+          }
+        },
+        "required": [
+          "entities"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Delete media or folders",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "mediaFavorite",
+      "title": "Toggle media favorite",
+      "description": "Toggle the favourite flag on media files and folders: favourites become unfavourited and the others become favourites.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "entities": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "entity": {
+                  "type": "string",
+                  "enum": [
+                    "file",
+                    "folder"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "entity"
+              ]
+            },
+            "description": "Files and folders to toggle"
+          }
+        },
+        "required": [
+          "entities"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Toggle media favorite",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "creditsBalance",
+      "title": "Check AI credit balance",
+      "description": "Get the workspace's AI credit balance (free and paid credits) and the credit cost of each AI action.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Check AI credit balance",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "generateCaption",
+      "title": "Generate a caption (uses AI credits)",
+      "description": "Write one ready-to-publish social media caption (text only) from a topic or idea with RepeatPost's caption engine, in the brand voice that applies to the workspace or to channelId. Uses workspace AI credits. Returns the caption, the new credit balance and the brand voice applied.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 3000,
+            "description": "Topic, idea or draft text for the caption"
+          },
+          "includeHashtags": {
+            "description": "End the caption with 2-4 relevant hashtags (default false)",
+            "type": "boolean"
+          },
+          "platform": {
+            "description": "Target platform, e.g. instagram, linkedin — tunes the wording",
+            "type": "string",
+            "maxLength": 40
+          },
+          "tone": {
+            "description": "Tone of voice, e.g. witty, professional",
+            "type": "string",
+            "maxLength": 120
+          },
+          "brandVoice": {
+            "description": "Brand voice name. Default: the voice that applies (channel pin, channel group or workspace default)",
+            "type": "string",
+            "maxLength": 191
+          },
+          "channelId": {
+            "description": "Channel id (uuid string) of a connected channel; the brand voice assigned to that channel is used",
+            "type": "string",
+            "maxLength": 191
+          }
+        },
+        "required": [
+          "prompt"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Generate a caption (uses AI credits)",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "renderGraphic",
+      "title": "Render an SVG design to a PNG",
+      "description": "Render an SVG design to a PNG image and save it to the workspace media library as a new file. The SVG is drawn exactly as written; no AI model is involved and no credits are used. Output sizes in pixels: square 1080x1080, portrait 1080x1350, story 1080x1920, landscape 1200x628, wide 1920x1080, or a custom width and height up to 2160 px. The SVG's viewBox (or its width and height) has to have the same aspect ratio as the output, within 1%, and is scaled to exactly that size; an SVG with no size gets the output size as its viewBox, and a mismatched one is refused, so nothing is letterboxed. Transparent areas are filled with the root background colour (style=\"background: …\") or white, so the PNG is fully opaque. Fonts available: Inter, Montserrat, Poppins, Playfair Display, Roboto, each in weights 400, 600, 700; any other font family renders in Inter. Images inside the SVG can be base64 data URIs (PNG, JPEG or WebP) or https://cdn.repeatpost.com media URLs (up to 10, 10 MB each); other external references are rejected and scripts are not run. Returns the saved file: url, mediaId, path, width, height and fileSize in bytes.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "svg": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 204800,
+            "description": "SVG markup, up to 200 KB"
+          },
+          "size": {
+            "description": "Output size preset, in pixels: square 1080x1080, portrait 1080x1350, story 1080x1920, landscape 1200x628, wide 1920x1080. Default square.",
+            "type": "string",
+            "enum": [
+              "square",
+              "portrait",
+              "story",
+              "landscape",
+              "wide"
+            ]
+          },
+          "width": {
+            "description": "Custom output width in px (16-2160), used with height instead of size",
+            "type": "integer",
+            "minimum": 16,
+            "maximum": 2160
+          },
+          "height": {
+            "description": "Custom output height in px (16-2160), used with width instead of size",
+            "type": "integer",
+            "minimum": 16,
+            "maximum": 2160
+          },
+          "fileName": {
+            "description": "File name for the saved PNG; .png is added when missing",
+            "type": "string",
+            "maxLength": 255
+          },
+          "folderId": {
+            "description": "Media library folder id to save into; the root folder when omitted",
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "caption": {
+            "description": "Caption stored with the media file",
+            "type": "string",
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "svg"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Render an SVG design to a PNG",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "brandImage",
+      "title": "Add the brand logo to an image",
+      "description": "Add the brand's logo to an image from the workspace media library and save the result as a new media file; the original file is left unchanged. No AI model is involved and no credits are used. The logo and colours come from the brand voice that applies: the workspace default, the voice of a given channel, or a voice named explicitly. The logo variant (for light or dark backgrounds) is chosen by the brightness of the area it covers, and blank logo files are skipped. Optional extras: a frame in the brand's primary colour and a caption band of short text along the bottom in a brand colour. PNG images stay PNG; JPEG and WebP images are saved as JPEG. Returns the saved file: url, mediaId, path, width, height and fileSize in bytes.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "mediaId": {
+            "description": "Media library file id of the image (PNG, JPEG or WebP)",
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "mediaUrl": {
+            "description": "Media library URL of the image (https://cdn.repeatpost.com/...), as an alternative to mediaId",
+            "type": "string",
+            "maxLength": 2048
+          },
+          "brandVoice": {
+            "description": "Brand voice name. Default: the voice that applies to the workspace or to channelId",
+            "type": "string",
+            "maxLength": 191
+          },
+          "channelId": {
+            "description": "Channel id (uuid) of a connected channel; its brand voice is used",
+            "type": "string",
+            "maxLength": 191
+          },
+          "logoPosition": {
+            "description": "Where the logo goes. Default bottom-right",
+            "type": "string",
+            "enum": [
+              "top-left",
+              "top-center",
+              "top-right",
+              "bottom-left",
+              "bottom-center",
+              "bottom-right"
+            ]
+          },
+          "logoScale": {
+            "description": "Logo width as a fraction of the image's shorter edge (0.05-0.5). Default 0.16",
+            "type": "number",
+            "minimum": 0.05,
+            "maximum": 0.5
+          },
+          "frame": {
+            "description": "Draw a border in the brand's primary colour",
+            "type": "boolean"
+          },
+          "captionStrip": {
+            "description": "Short text (up to 120 characters) set on a band along the bottom in a brand colour",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "fileName": {
+            "description": "File name for the new image; the matching extension is added when missing",
+            "type": "string",
+            "maxLength": 255
+          },
+          "folderId": {
+            "description": "Media library folder id to save into. Default: the original image's folder",
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Add the brand logo to an image",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "listWorkspaces",
+      "title": "List workspaces",
+      "description": "List the workspaces the signed-in user can access, with each workspace's name, workspaceUuid, role and whether it is the active one (isCurrent).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "List workspaces",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "switchWorkspace",
+      "title": "Switch workspace for this session",
+      "description": "Switch the active workspace for the rest of this session: posts, media, channels and billing then refer to the chosen workspace, without reconnecting. The target is given by workspaceUuid (exact) or by name (case-insensitive). The switch lasts until the next switch or the end of the session.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspaceUuid": {
+            "description": "Exact workspaceUuid of an accessible workspace",
+            "type": "string"
+          },
+          "name": {
+            "description": "Workspace name, case-insensitive; a name shared by two workspaces is refused",
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Switch workspace for this session",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "listBrandVoices",
+      "title": "List brand voices",
+      "description": "List the workspace's brand voices, the saved styles that shape generated captions and branded images, with each voice's uuid, name, description, status and whether it is the default.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "List brand voices",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "getBrandVoice",
+      "title": "Get the brand voice that applies",
+      "description": "Show which brand voice applies to the workspace or to one channel, and why: pinned to the channel, inherited from a channel group, or the workspace default. Also returns the voice's design data: colours (role to hex, plus legible background and text pairs), logo file URLs and a one-line visual style.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "description": "Channel id (uuid string) of a connected channel; resolves the voice for that channel",
+            "type": "string",
+            "maxLength": 191
+          },
+          "voiceName": {
+            "description": "Look up one voice by name",
+            "type": "string",
+            "maxLength": 191
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Get the brand voice that applies",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "setDefaultBrandVoice",
+      "title": "Change the default brand voice",
+      "description": "Make one brand voice the workspace default. Future captions and branded images use it unless a channel or channel group has a voice of its own.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "voiceName": {
+            "type": "string",
+            "maxLength": 191,
+            "description": "Name of the brand voice"
+          }
+        },
+        "required": [
+          "voiceName"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Change the default brand voice",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    }
+  ]
+}

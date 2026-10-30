@@ -1,0 +1,30 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.repeatpost/mcp",
+  "title": "RepeatPost",
+  "description": "Schedule and publish social media posts, write captions and create branded graphics with RepeatPost.",
+  "version": "1.3.0",
+  "websiteUrl": "https://www.repeatpost.com",
+  "repository": {
+    "url": "https://github.com/repeatpost/repeatpost-mcp",
+    "source": "github"
+  },
+  "icons": [
+    {
+      "src": "https://www.repeatpost.com/icon.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": ["any"]
+    },
+    {
+      "src": "https://www.repeatpost.com/apple-icon.png",
+      "mimeType": "image/png",
+      "sizes": ["180x180"]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://api.repeatpost.com/mcp"
+    }
+  ]
+}
