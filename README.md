@@ -12,6 +12,7 @@
   <a href="https://help.repeatpost.com/integrations/mcp-server">Documentation</a> ·
   <a href="https://www.repeatpost.com">Website</a> ·
   <a href="https://registry.modelcontextprotocol.io/v0/servers?search=com.repeatpost/mcp">MCP Registry</a> ·
+  <a href="https://smithery.ai/servers/info-342p/repeatpost">Smithery</a> ·
   <a href="mailto:support@repeatpost.com">Support</a>
 </p>
 
@@ -300,6 +301,7 @@ To report a security issue, email [support@repeatpost.com](mailto:support@repeat
 - Documentation: [help.repeatpost.com/integrations/mcp-server](https://help.repeatpost.com/integrations/mcp-server)
 - Website: [www.repeatpost.com](https://www.repeatpost.com)
 - MCP Registry entry: [`com.repeatpost/mcp`](https://registry.modelcontextprotocol.io/v0/servers?search=com.repeatpost/mcp)
+- Smithery: [smithery.ai/servers/info-342p/repeatpost](https://smithery.ai/servers/info-342p/repeatpost)
 - Support: [support@repeatpost.com](mailto:support@repeatpost.com)
 
 ## License
