@@ -2,7 +2,7 @@
 
 All notable changes to this repository are recorded here, in the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 
-The hosted server has its own version: the `version` field in [`server.json`](server.json), currently 1.3.0. Its published versions are listed in the [MCP Registry](https://registry.modelcontextprotocol.io/v0/servers?search=com.repeatpost/mcp).
+The hosted server has its own version: the `version` field in [`server.json`](server.json), currently 1.3.1. Its published versions are listed in the [MCP Registry](https://registry.modelcontextprotocol.io/v0/servers?search=com.repeatpost/mcp).
 
 ## [Unreleased]
 
@@ -16,4 +16,5 @@ The hosted server has its own version: the `version` field in [`server.json`](se
 
 ### Changed
 
+- `server.json`: version 1.3.1, the first MCP Registry version that links this repository.
 - README: reorganised into overview, features, platforms, tools, setup, authentication, client configuration, examples, permissions and security, troubleshooting, directories and support. The supported platforms are now a table with one row per platform.
