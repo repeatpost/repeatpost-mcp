@@ -1,0 +1,30 @@
+# Run by hand from the Actions tab. Checks the live server's sign-in setup
+# without credentials: requests without a token must get a 401 that points to
+# OAuth metadata matching server.json and the README. It never signs in and
+# never calls a tool.
+name: Check live endpoint
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Live sign-in setup
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+
+      - name: Check the live endpoint
+        run: npm run check-live

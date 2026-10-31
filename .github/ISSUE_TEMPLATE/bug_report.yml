@@ -1,0 +1,57 @@
+name: Bug report
+description: Something in the RepeatPost MCP server or this documentation isn't working as described.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Never paste access tokens, refresh tokens, passwords or API keys here.** This repository is public.
+        To report a security vulnerability, follow [SECURITY.md](https://github.com/repeatpost/repeatpost-mcp/blob/main/SECURITY.md) instead of opening an issue.
+  - type: dropdown
+    id: area
+    attributes:
+      label: What is affected?
+      options:
+        - Connecting or signing in
+        - A tool
+        - The documentation in this repository
+        - Something else
+    validations:
+      required: true
+  - type: input
+    id: client
+    attributes:
+      label: AI client
+      placeholder: Claude, Claude Code, Cursor, VS Code, ...
+    validations:
+      required: true
+  - type: input
+    id: tool
+    attributes:
+      label: Tool name, if any
+      placeholder: schedulePost
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Include the exact error message.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Ask the assistant: "..."
+        2. ...
+  - type: input
+    id: when
+    attributes:
+      label: When did it happen?
+      description: Date, time and time zone.

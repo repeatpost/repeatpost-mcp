@@ -1,0 +1,25 @@
+name: Tool request
+description: Ask for something your assistant can't do with RepeatPost yet.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: What do you want your assistant to do?
+      description: Describe the task, not the implementation.
+    validations:
+      required: true
+  - type: textarea
+    id: prompt
+    attributes:
+      label: Example prompt
+      placeholder: '"Repost last week''s best LinkedIn post to X on Monday at 9am."'
+  - type: input
+    id: platforms
+    attributes:
+      label: Platforms involved, if any
+      placeholder: LinkedIn, X
+  - type: textarea
+    id: workaround
+    attributes:
+      label: How do you do this today?
