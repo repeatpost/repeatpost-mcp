@@ -1,0 +1,8 @@
+{
+  "$comment": "What validate-metadata.mjs expects. Change toolCount or platformCount in the same pull request that adds or removes a tool or platform. EXPECTED_TOOL_COUNT and EXPECTED_PLATFORM_COUNT override them for one run.",
+  "serverName": "com.repeatpost/mcp",
+  "remoteUrl": "https://api.repeatpost.com/mcp",
+  "repositoryUrl": "https://github.com/repeatpost/repeatpost-mcp",
+  "toolCount": 35,
+  "platformCount": 15
+}

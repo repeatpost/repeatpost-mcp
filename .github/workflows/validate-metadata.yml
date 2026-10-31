@@ -1,0 +1,36 @@
+# Checks server.json against the official MCP Registry schema, checks
+# tools.json, and checks that README.md agrees with both. Read-only: it never
+# changes a file and uses no secrets.
+name: Validate metadata
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: server.json, tools.json and README
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+
+      - name: Install the validator's dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: Validate
+        run: npm run validate
