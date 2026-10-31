@@ -15,6 +15,10 @@
   <a href="mailto:support@repeatpost.com">Support</a>
 </p>
 
+<p align="center">
+  <a href="https://mcp.tc/i/repeatpost"><img src="https://mcp.tc/i/repeatpost/badge.svg" alt="RepeatPost on mcp.tc"></a>
+</p>
+
 ---
 
 RepeatPost MCP is a remote, hosted [Model Context Protocol](https://modelcontextprotocol.io) server. Add one URL to your AI assistant, sign in to RepeatPost in your browser, and choose what the assistant may do. It then works with the channels connected to your RepeatPost workspace and stays within your workspace role.
