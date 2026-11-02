@@ -338,7 +338,7 @@ Install it in Claude Code, Cursor, Codex, Cline and other agents that support [A
 npx skills add repeatpost/repeatpost-mcp
 ```
 
-The skill needs the MCP server to be connected (see [Client configuration](#client-configuration)). It's also included in the Cursor plugin.
+The skill needs the MCP server to be connected (see [Client configuration](#client-configuration)). It's listed on [skills.sh](https://skills.sh/repeatpost/repeatpost-mcp/repeatpost-social-media-manager), and it's also included in the Cursor plugin.
 
 ## Tool permissions and security
 
@@ -395,6 +395,7 @@ RepeatPost is listed in these MCP directories:
 | Smithery | [smithery.ai/servers/info-342p/repeatpost](https://smithery.ai/servers/info-342p/repeatpost) |
 | mcp.tc | [mcp.tc/i/repeatpost](https://mcp.tc/i/repeatpost) |
 | MCPBundles | [mcpbundles.com/skills/repeatpost-mcp](https://www.mcpbundles.com/skills/repeatpost-mcp) |
+| skills.sh (agent skill) | [skills.sh/repeatpost/repeatpost-mcp](https://skills.sh/repeatpost/repeatpost-mcp) |
 
 ## Support
 
