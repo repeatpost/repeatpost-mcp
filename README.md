@@ -328,6 +328,18 @@ Any client that supports remote MCP servers with OAuth sign-in can connect. Add 
 - *"What's scheduled for next week, and did any posts fail?"*
 - *"Write three LinkedIn captions about our new feature in our brand voice."*
 
+## Agent skill
+
+The [`repeatpost-social-media-manager`](skills/repeatpost-social-media-manager/SKILL.md) skill teaches AI agents how to use these tools well. It covers finding the right channel, staying within each platform's limits, converting times to UTC, reporting only real results, and asking before anything that schedules, publishes or deletes.
+
+Install it in Claude Code, Cursor, Codex, Cline and other agents that support [Agent Skills](https://agentskills.io):
+
+```bash
+npx skills add repeatpost/repeatpost-mcp
+```
+
+The skill needs the MCP server to be connected (see [Client configuration](#client-configuration)). It's also included in the Cursor plugin.
+
 ## Tool permissions and security
 
 ### Permissions (OAuth scopes)
@@ -412,6 +424,7 @@ See [SUPPORT.md](SUPPORT.md) for what to include when you ask for help.
 | [`.cursor-plugin/plugin.json`](.cursor-plugin/plugin.json) | Cursor plugin manifest for the Cursor Marketplace |
 | [`mcp.json`](mcp.json) | The server's connection settings, used by the Cursor plugin |
 | [`assets/`](assets) | Square logos on a white background, for directories that need one |
+| [`skills/`](skills) | The agent skill for using the RepeatPost tools |
 | [`scripts/`](scripts) | Checks that keep `server.json`, `tools.json` and this README consistent |
 | [`.github/`](.github) | Workflows, issue forms and the pull request template |
 

@@ -32,6 +32,14 @@ Pull requests that fix or clarify the documentation are welcome. Follow these ru
 
 The expected tool and platform counts are in [`scripts/expected.json`](scripts/expected.json). When a tool or platform is added or removed, update the count there in the same pull request.
 
+### Agent skill conventions
+
+The same check covers each `skills/<name>/SKILL.md`, which follows the [Agent Skills](https://agentskills.io) format:
+
+- The frontmatter `name` matches the folder name: 1-64 characters of `a-z`, `0-9` and `-`.
+- The `description` is written on one line, in at most 1024 characters. `compatibility`, if set, is at most 500 characters.
+- Every name in backticks that looks like a tool or parameter (such as `schedulePost` or `scheduledFor`) must appear in `tools.json`. When a tool or parameter is renamed or removed, update the skill in the same pull request.
+
 ### Check your change
 
 You need Node.js 20 or later.
