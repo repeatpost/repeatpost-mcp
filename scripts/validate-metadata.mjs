@@ -410,6 +410,14 @@ function subfolders(dir) {
     .sort();
 }
 
+/** Every file under `dir`, recursively, as paths relative to the repository root. */
+function filesUnder(dir) {
+  if (!existsSync(join(root, dir))) return [];
+  return readdirSync(join(root, dir), { withFileTypes: true })
+    .flatMap((d) => (d.isDirectory() ? filesUnder(`${dir}/${d.name}`) : [`${dir}/${d.name}`]))
+    .sort();
+}
+
 /**
  * Backticked camelCase names in `text` (tools, parameters, fields) that appear
  * nowhere in tools.json as a whole word. A renamed or invented tool appears nowhere.
@@ -456,42 +464,90 @@ function checkSkills(tools) {
     const lines = parsed.body.split('\n').length;
     if (lines > 500) report.warn(`${file}: ${lines} lines; the Agent Skills spec recommends under 500`);
 
+    const skillDir = `skills/${folder}`;
+    const references = filesUnder(`${skillDir}/references`);
+    const markdown = filesUnder(skillDir).filter((f) => f.endsWith('.md'));
+
+    // Installers copy the skill folder on its own, so every relative link in
+    // it has to resolve inside the folder.
+    const linkedFromSkill = new Set();
+    let linkCount = 0;
+    for (const md of markdown) {
+      const text = prose(readFileSync(join(root, md), 'utf8'));
+      for (const [, target] of text.matchAll(/\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g)) {
+        if (/^[a-z][a-z0-9+.-]*:/i.test(target)) continue;
+        linkCount += 1;
+        const [path, anchor] = target.split('#');
+        const resolved = path ? join(dirname(md), decodeURIComponent(path)) : md;
+        if (resolved !== skillDir && !resolved.startsWith(`${skillDir}/`)) {
+          problem(`${md} links to ${target}, outside the skill folder; installed copies can't follow it`);
+        } else if (!existsSync(join(root, resolved))) {
+          problem(`${md} links to ${target}, which doesn't exist`);
+        } else if (anchor && !anchors(prose(readFileSync(join(root, resolved), 'utf8')).split('\n')).has(anchor)) {
+          problem(`${md} links to ${target}, but that heading doesn't exist`);
+        }
+        if (md === file) linkedFromSkill.add(resolved);
+      }
+    }
+    const unlinked = references.filter((r) => !linkedFromSkill.has(r));
+    if (unlinked.length) problem(`SKILL.md never links to ${unlinked.join(', ')}, so agents won't read it`);
+
     let names = [];
     if (tools) {
-      const found = unknownToolNames(prose(parsed.body));
-      names = found.names;
-      if (found.unknown.length) {
-        problem(`names that aren't a tool, parameter or field in tools.json: ${found.unknown.join(', ')}`);
+      for (const f of [file, ...references]) {
+        const text = f === file ? parsed.body : readFileSync(join(root, f), 'utf8');
+        const found = unknownToolNames(prose(text));
+        names.push(...found.names);
+        if (found.unknown.length) {
+          problem(`${f}: names that aren't a tool, parameter or field in tools.json: ${found.unknown.join(', ')}`);
+        }
+      }
+      names = [...new Set(names)];
+
+      // A tools table in references/ must list exactly the server's tools,
+      // and say "Yes" under "Ask first" for every destructive one.
+      const toolsRef = `${skillDir}/references/tools.md`;
+      if (existsSync(join(root, toolsRef))) {
+        const rows = tableRows(prose(readFileSync(join(root, toolsRef), 'utf8')).split('\n'));
+        const listed = new Map(rows.map((cells) => [/^`([^`]+)`$/.exec(cells[0])?.[1], cells]).filter(([n]) => n));
+        const { missing, extra } = sameSet(new Set(listed.keys()), new Set(tools.map((t) => t.name)));
+        if (missing.length) problem(`${toolsRef} is missing tools: ${missing.join(', ')}`);
+        if (extra.length) problem(`${toolsRef} lists tools that aren't in tools.json: ${extra.join(', ')}`);
+        const notAsked = tools
+          .filter((t) => t.annotations?.destructiveHint === true && listed.has(t.name))
+          .filter((t) => !/^yes\b/i.test(listed.get(t.name).at(-1) ?? ''))
+          .map((t) => t.name);
+        if (notAsked.length) problem(`${toolsRef} must say "Yes" under "Ask first" for these destructive tools: ${notAsked.join(', ')}`);
       }
     }
 
     if (!problems) {
-      report.pass('skills', `${file}: valid frontmatter, and all ${names.length} tool and parameter names exist in tools.json`);
+      report.pass(
+        'skills',
+        `${file}: valid frontmatter, ${references.length} references linked, ${linkCount} links resolve inside the skill folder, and all ${names.length} tool and parameter names exist in tools.json`,
+      );
     }
   }
   return folders;
 }
 
-// ---- evals/<skill>/ -------------------------------------------------------
+// ---- skills/<skill>/evals/ ------------------------------------------------
 
 // skill-creator's evals.json fields, plus `name` and `setup`.
 const EVAL_KEYS = new Set(['id', 'name', 'prompt', 'expected_output', 'files', 'expectations', 'setup']);
 const nonEmpty = (v) => typeof v === 'string' && v.trim() !== '';
 
-/** Checks evals/<skill>/evals.json and trigger-evals.json; returns counts for the summary. */
+/** Checks each skill's evals/evals.json and evals/trigger-evals.json; returns counts for the summary. */
 function checkEvals(tools, skills) {
   const counts = { behaviour: 0, trigger: 0 };
-  for (const folder of subfolders('evals')) {
+  for (const folder of skills) {
     const fail = (file, message) => report.fail('evals', `${file}: ${message}`, file);
-    const dir = `evals/${folder}`;
-    if (!skills.includes(folder)) {
-      fail(dir, `there's no skill called "${folder}" in skills/`);
-      continue;
-    }
+    const dir = `skills/${folder}/evals`;
+    if (!existsSync(join(root, dir))) continue;
 
     const file = `${dir}/evals.json`;
     if (!existsSync(join(root, file))) {
-      fail(file, 'missing; every folder in evals/ needs an evals.json');
+      fail(file, "missing; a skill's evals/ folder needs an evals.json");
     } else {
       const doc = readJson(file);
       let problems = 0;

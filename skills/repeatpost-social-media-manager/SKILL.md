@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Requires the RepeatPost MCP server (https://api.repeatpost.com/mcp) connected with OAuth sign-in, and a RepeatPost account with social channels connected in the RepeatPost app."
 metadata:
   author: RepeatPost
-  version: "1.2.0"
+  version: "1.3.0"
 ---
 
 # RepeatPost Social Media Manager
@@ -46,7 +46,7 @@ The tools come from the RepeatPost MCP server at `https://api.repeatpost.com/mcp
    - Slack and Discord: `listSlackChannels`, `listDiscordChannels`
    - WordPress: `listWordPressPostTypes`, `listWordPressCategories`, `listWordPressTags`
 
-   Put the chosen board, channel or category in the post's settings, as the settings schema describes.
+   Put the chosen board, channel or category in the post's settings, as the settings schema describes. For per-platform details and multi-channel settings, read [references/platforms.md](references/platforms.md).
 
 ## 3. Write captions
 
@@ -58,6 +58,8 @@ The tools come from the RepeatPost MCP server at `https://api.repeatpost.com/mcp
 - Only say a caption came from RepeatPost if `generateCaption` returned it.
 
 ## 4. Graphics and media
+
+Before you design a graphic or brand a photo, read [references/graphics.md](references/graphics.md). It has the SVG rules that `renderGraphic` enforces, the fonts, and the `brandImage` options.
 
 - `renderGraphic` turns an SVG you design into a PNG in the media library. Sizes: square 1080x1080, portrait 1080x1350, story 1080x1920, landscape 1200x628, wide 1920x1080. No AI model and no credits. Use the colours and logo from `getBrandVoice`.
 - `brandImage` adds the brand logo, and optionally a frame or caption band, to a library image and saves a new file. The original is unchanged.
@@ -131,8 +133,9 @@ Show the user exactly what will happen, and wait for a clear yes before these ac
 | Rename or delete media | `mediaRename`, `mediaDelete` |
 | Change the default brand voice | `setDefaultBrandVoice` |
 | Switch workspace | `switchWorkspace` |
+| Create a Pinterest board, which appears on the user's account | `createPinterestBoard` |
 
-Reading, searching and saving drafts don't need confirmation.
+Reading, searching and saving drafts don't need confirmation. [references/tools.md](references/tools.md) lists every tool, with its permission and whether to ask first.
 
 ## 10. Permissions
 
@@ -171,6 +174,16 @@ The workspace role is always the ceiling: a Viewer can only read. Channel approv
 
 - AI images and videos: create them in the RepeatPost app.
 - Connecting channels, accounts and billing: done in the RepeatPost app.
+
+## References
+
+Open these only when the task needs them:
+
+| File | Read it when |
+|---|---|
+| [references/tools.md](references/tools.md) | You need a tool's permission, or whether to ask first |
+| [references/platforms.md](references/platforms.md) | You're preparing a post for a specific platform, or for several channels at once |
+| [references/graphics.md](references/graphics.md) | You're designing a graphic or putting a logo on a photo |
 
 ## Links
 

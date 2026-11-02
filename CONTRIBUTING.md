@@ -39,7 +39,9 @@ The same check covers each `skills/<name>/SKILL.md`, which follows the [Agent Sk
 - The frontmatter `name` matches the folder name: 1-64 characters of `a-z`, `0-9` and `-`.
 - The `description` is written on one line, in at most 1024 characters. `compatibility`, if set, is at most 500 characters.
 - Every name in backticks that looks like a tool or parameter (such as `schedulePost` or `scheduledFor`) must appear in `tools.json`. When a tool or parameter is renamed or removed, update the skill in the same pull request.
-- When you change the skill, run its evals in a test workspace, as described in [`evals/README.md`](evals/README.md). When you fix a bug in it, first add an eval that reproduces the bug. `npm run validate` checks the format of the eval files, but it doesn't run them.
+- Each file in the skill's `references/` folder must be linked from `SKILL.md`, otherwise agents never read it. `references/tools.md` must list exactly the tools in `tools.json`, with "Yes" under "Ask first" for every destructive tool.
+- Installers copy the skill folder on its own, so links inside it must stay inside it. Link to anything else in the repository with its full GitHub URL.
+- When you change the skill, run its evals in a test workspace, as described in [`evals/README.md`](skills/repeatpost-social-media-manager/evals/README.md). When you fix a bug in it, first add an eval that reproduces the bug. `npm run validate` checks the format of the eval files, but it doesn't run them. Describe harmful test content, such as an injection, instead of writing it out, because the evals are installed with the skill and read by security scanners.
 
 ### Check your change
 
