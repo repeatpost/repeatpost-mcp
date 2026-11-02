@@ -1,0 +1,32 @@
+{
+  "name": "repeatpost",
+  "displayName": "RepeatPost",
+  "version": "1.0.0",
+  "description": "Schedule and publish social media posts to 15 platforms, write captions in your brand voice, create branded graphics and manage your media library, from Cursor.",
+  "author": {
+    "name": "RepeatPost",
+    "email": "support@repeatpost.com"
+  },
+  "homepage": "https://www.repeatpost.com/mcp",
+  "repository": "https://github.com/repeatpost/repeatpost-mcp",
+  "license": "MIT",
+  "logo": "assets/logo.png",
+  "keywords": [
+    "repeatpost",
+    "social media",
+    "scheduling",
+    "publishing",
+    "captions",
+    "branded graphics",
+    "marketing",
+    "mcp"
+  ],
+  "category": "integrations",
+  "tags": [
+    "repeatpost",
+    "social media",
+    "scheduling",
+    "mcp"
+  ],
+  "mcpServers": "./mcp.json"
+}
