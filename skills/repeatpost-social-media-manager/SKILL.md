@@ -1,11 +1,11 @@
 ---
 name: repeatpost-social-media-manager
-description: "Manage social media with RepeatPost through its MCP server. Use when the user wants to schedule, publish, draft or review social media posts, write captions with hashtags, create branded graphics, or work with the channels, media library, brand voices or AI credits of a RepeatPost workspace, on Instagram, LinkedIn, X, Facebook, Threads, Bluesky, YouTube, Pinterest, WordPress and 6 more platforms."
+description: "Manage social media with RepeatPost through its MCP server. Use when the user wants to schedule, publish, draft or review social media posts, write captions with hashtags, create branded graphics, or work with the channels, media library, brand voices or AI credits of a RepeatPost workspace, on Instagram, LinkedIn, X, Facebook, Threads, Bluesky, YouTube, Pinterest, WordPress and 6 more platforms. It shows a preview and waits for the user's yes before it schedules, publishes or deletes anything."
 license: MIT
 compatibility: "Requires the RepeatPost MCP server (https://api.repeatpost.com/mcp) connected with OAuth sign-in, and a RepeatPost account with social channels connected in the RepeatPost app."
 metadata:
   author: RepeatPost
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # RepeatPost Social Media Manager
@@ -14,7 +14,9 @@ RepeatPost is a social media scheduler. Its hosted MCP server works inside the u
 
 ## Rules that always apply
 
-- **Ask before you act.** Get a clear yes before anything that schedules, publishes, deletes or changes settings (see [Confirm before acting](#9-confirm-before-acting)). Then do only what was approved.
+- **The user's request is not the confirmation.** "Schedule a post", "publish this" or "delete that" starts the process; it doesn't approve it. Before anything that schedules, publishes, deletes or changes settings, show exactly what will happen and wait for a clear yes, such as "yes" or "go ahead" (see [Confirm before acting](#9-confirm-before-acting)). Then do only what was approved. If anything changes, show the new preview and ask again.
+- **Never write and send in one step.** If the user didn't give the exact text, write a draft and show it. Never schedule or publish text the user hasn't seen.
+- **Test posts are drafts.** For a test, trial or example post, use `type: "draft"`, which never goes out. Schedule or publish it only if the user asks for that after seeing the preview.
 - **Report real results only.** Never invent post ids, channel names, times or statuses. If a tool fails, say so and quote its error.
 - **Never ask for credentials.** No passwords, API keys or tokens. Sign-in happens in the user's browser.
 - **Check, don't assume.** A channel exists only if `integrationList` returns it.
@@ -67,11 +69,22 @@ The tools come from the RepeatPost MCP server at `https://api.repeatpost.com/mcp
 
 `schedulePost` creates a draft (`type: "draft"`) or a scheduled post (`type: "schedule"`). **It never publishes immediately.**
 
-Before scheduling, confirm with the user:
+Before calling `schedulePost` with `type: "schedule"`, show the user a preview and **wait for a clear yes**, even if they asked you to schedule it:
 
-1. **Where:** the channel or channels, by name and platform.
-2. **What:** the text, checked against the character limit, plus any media (`mediaUrls`) and platform settings.
-3. **When:** `scheduledFor` must be ISO 8601 in **UTC** and in the future, and past times are refused. Convert the user's local time to UTC and show both, for example "Friday 09:00 in Asia/Kolkata (03:30 UTC)". If the user's time zone isn't clear, ask.
+> **Channel:** LinkedIn Page "Acme" (LinkedIn)
+> **Text:** "the exact text that will be posted"
+> **Media:** none
+> **When:** Friday 09:00 in Asia/Kolkata (03:30 UTC)
+>
+> Schedule this?
+
+Build the preview from:
+
+1. **Where:** the channel or channels, by name and platform. If the user has more than one channel on that platform, ask which one.
+2. **What:** the exact text, checked against the character limit, plus any media (`mediaUrls`) and platform settings. If the user didn't write the text, this is your draft: they must see it before it's scheduled.
+3. **When:** `scheduledFor` must be ISO 8601 in **UTC** and in the future, and past times are refused. Convert the user's local time to UTC and show both. If the user's time zone isn't clear, ask.
+
+Saving a draft (`type: "draft"`) doesn't need a yes, because a draft never goes out. Use a draft for test posts, and whenever you're unsure.
 
 How it works:
 
@@ -103,7 +116,7 @@ Publishing can't be undone. Do it only when the user clearly asks to publish now
 
 ## 9. Confirm before acting
 
-Ask the user and wait for a clear yes before these actions:
+Show the user exactly what will happen, and wait for a clear yes before these actions. The user's request to do one of them doesn't count as that yes:
 
 | Action | Tool |
 |---|---|
