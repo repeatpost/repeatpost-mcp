@@ -444,6 +444,7 @@ See [SUPPORT.md](SUPPORT.md) for what to include when you ask for help.
 | [`mcp.json`](mcp.json) | The server's connection settings, used by the Cursor plugin |
 | [`assets/`](assets) | Square logos on a white background, for directories that need one |
 | [`skills/`](skills) | The agent skill for using the RepeatPost tools |
+| [`evals/`](evals/README.md) | Tests for the agent skill: behaviour scenarios and when it should load |
 | [`scripts/`](scripts) | Checks that keep `server.json`, `tools.json` and this README consistent |
 | [`.github/`](.github) | Workflows, issue forms and the pull request template |
 
