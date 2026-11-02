@@ -280,6 +280,27 @@ Add this to `.vscode/mcp.json`:
 }
 ```
 
+### Cline
+
+In Cline, open **MCP Servers**, then **Remote Servers**. Enter `repeatpost` as the name and `https://api.repeatpost.com/mcp` as the URL, choose **Streamable HTTP**, and select **Add Server**. Then select **Authenticate** and sign in to RepeatPost in your browser.
+
+To edit `cline_mcp_settings.json` instead, add this. Keep `"type": "streamableHttp"`: without it, Cline uses the legacy SSE transport and can't connect.
+
+```json
+{
+  "mcpServers": {
+    "repeatpost": {
+      "type": "streamableHttp",
+      "url": "https://api.repeatpost.com/mcp",
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
+```
+
+[`llms-install.md`](llms-install.md) has step-by-step instructions for AI agents such as Cline that install the server themselves.
+
 ### Clients that only support stdio
 
 Use [`mcp-remote`](https://www.npmjs.com/package/mcp-remote) as a bridge:
@@ -387,6 +408,7 @@ See [SUPPORT.md](SUPPORT.md) for what to include when you ask for help.
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | How to report bugs, request tools and change the docs |
 | [`SUPPORT.md`](SUPPORT.md) | Where to get help |
 | [`CHANGELOG.md`](CHANGELOG.md) | Changes to this repository |
+| [`llms-install.md`](llms-install.md) | Setup instructions for AI agents that install MCP servers themselves, such as Cline |
 | [`scripts/`](scripts) | Checks that keep `server.json`, `tools.json` and this README consistent |
 | [`.github/`](.github) | Workflows, issue forms and the pull request template |
 
