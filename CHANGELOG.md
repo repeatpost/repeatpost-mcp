@@ -8,6 +8,7 @@ The hosted server has its own version: the `version` field in [`server.json`](se
 
 ### Added
 
+- The `repeatpost-social-media-manager` agent skill in `skills/`, installed with `npx skills add repeatpost/repeatpost-mcp`. The validator checks its format and that every tool and parameter name it uses exists in `tools.json`.
 - A Cursor plugin: `.cursor-plugin/plugin.json` and `mcp.json`, plus square logos on a white background in `assets/`.
 - `llms-install.md` and a Cline section in the README, for agents that set up the server themselves.
 - `SECURITY.md`, `CONTRIBUTING.md`, `SUPPORT.md` and this changelog.

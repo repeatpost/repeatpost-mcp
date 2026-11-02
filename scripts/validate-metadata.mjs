@@ -1,14 +1,14 @@
 #!/usr/bin/env node
-// Checks that server.json, tools.json and README.md are valid and agree with
-// each other. Expected values live in scripts/expected.json. Read-only: it
-// never changes a file.
+// Checks that server.json, tools.json, README.md and the agent skills in
+// skills/ are valid and agree with each other. Expected values live in
+// scripts/expected.json. Read-only: it never changes a file.
 //
 //   npm ci
 //   npm run validate
 //
-// The README conventions it relies on are described in CONTRIBUTING.md.
+// The README and skill conventions it relies on are described in CONTRIBUTING.md.
 
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import Ajv from 'ajv';
@@ -23,6 +23,7 @@ const report = createReport('Metadata validation', {
   server: 'server.json rules',
   tools: 'tools.json',
   readme: 'README consistency',
+  skills: 'Skills',
 });
 
 const SCHEMA_URL = /^https:\/\/static\.modelcontextprotocol\.io\/schemas\/[^/]+\/server\.schema\.json$/;
@@ -382,6 +383,82 @@ function checkReadme(tools) {
   return platformCount;
 }
 
+// ---- skills/*/SKILL.md ----------------------------------------------------
+
+// Agent Skills spec (agentskills.io): 1-64 of a-z, 0-9 and "-", no leading,
+// trailing or doubled hyphen.
+const SKILL_NAME = /^(?!-)(?!.*--)[a-z0-9-]{1,64}(?<!-)$/;
+
+/** The frontmatter's top-level `key: value` lines and the body after it; nested maps are skipped. */
+function frontmatter(text) {
+  const m = /^---\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/.exec(text);
+  if (!m) return undefined;
+  const fields = {};
+  for (const line of m[1].split(/\r?\n/)) {
+    const kv = /^([A-Za-z][\w-]*):[ \t]*(.*)$/.exec(line);
+    if (kv) fields[kv[1]] = kv[2].trim().replace(/^(["'])(.*)\1$/, '$2');
+  }
+  return { fields, body: text.slice(m[0].length) };
+}
+
+function checkSkills(tools) {
+  const dir = join(root, 'skills');
+  if (!existsSync(dir)) return [];
+  const folders = readdirSync(dir, { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .map((d) => d.name)
+    .sort();
+  // Whole words anywhere in tools.json: tool names, parameters and the fields
+  // their descriptions mention. A renamed or invented tool appears nowhere.
+  const toolsText = readFileSync(join(root, 'tools.json'), 'utf8');
+  const inTools = (word) => new RegExp(`\\b${word}\\b`).test(toolsText);
+
+  for (const folder of folders) {
+    const file = `skills/${folder}/SKILL.md`;
+    let problems = 0;
+    const problem = (message) => {
+      report.fail('skills', `${file}: ${message}`, file);
+      problems += 1;
+    };
+    if (!existsSync(join(root, file))) {
+      problem('missing; every folder in skills/ needs a SKILL.md');
+      continue;
+    }
+    const parsed = frontmatter(readFileSync(join(root, file), 'utf8'));
+    if (!parsed) {
+      problem('must start with a frontmatter block between --- lines');
+      continue;
+    }
+
+    const { name, description, compatibility } = parsed.fields;
+    if (!name) problem('the frontmatter has no name');
+    else if (!SKILL_NAME.test(name)) {
+      problem(`name "${name}" must be 1-64 characters of a-z, 0-9 and "-", without a leading, trailing or doubled "-"`);
+    } else if (name !== folder) problem(`name "${name}" must match its folder name "${folder}"`);
+
+    if (!description || /^[>|]/.test(description)) problem('the frontmatter needs a description, written on one line');
+    else if (description.length > 1024) problem(`description is ${description.length} characters; the limit is 1024`);
+    if (compatibility !== undefined && (!compatibility || compatibility.length > 500)) {
+      problem(`compatibility must be 1-500 characters, got ${compatibility.length}`);
+    }
+
+    const lines = parsed.body.split('\n').length;
+    if (lines > 500) report.warn(`${file}: ${lines} lines; the Agent Skills spec recommends under 500`);
+
+    let names = [];
+    if (tools) {
+      names = [...new Set([...prose(parsed.body).matchAll(/`([a-z]+[A-Z][A-Za-z]*)`/g)].map((m) => m[1]))];
+      const unknown = names.filter((n) => !inTools(n));
+      if (unknown.length) problem(`names that aren't a tool, parameter or field in tools.json: ${unknown.join(', ')}`);
+    }
+
+    if (!problems) {
+      report.pass('skills', `${file}: valid frontmatter, and all ${names.length} tool and parameter names exist in tools.json`);
+    }
+  }
+  return folders;
+}
+
 // ---- run ------------------------------------------------------------------
 
 const server = readJson('server.json');
@@ -393,6 +470,7 @@ if (server) {
 }
 const tools = toolsDoc ? checkTools(toolsDoc) : undefined;
 const platformCount = checkReadme(tools);
+const skills = checkSkills(tools);
 
 report.summary([
   ['Server name', server?.name ? `\`${server.name}\`` : 'unknown'],
@@ -400,6 +478,7 @@ report.summary([
   ['Total tools', tools ? `${tools.length} (expected ${expected.toolCount})` : 'unknown'],
   ['Unique tools', tools ? String(new Set(tools.map((t) => t?.name)).size) : 'unknown'],
   ['Supported platforms', platformCount === undefined ? 'unknown' : `${platformCount} (expected ${expected.platformCount})`],
+  ['Skills', skills.length ? `${skills.length} (${skills.join(', ')})` : 'none'],
 ]);
 
 process.exitCode = report.failed() ? 1 : 0;
