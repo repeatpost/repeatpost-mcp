@@ -332,13 +332,31 @@ Any client that supports remote MCP servers with OAuth sign-in can connect. Add 
 
 The [`repeatpost-social-media-manager`](skills/repeatpost-social-media-manager/SKILL.md) skill teaches AI agents how to use these tools well. It covers finding the right channel, staying within each platform's limits, converting times to UTC, reporting only real results, and asking before anything that schedules, publishes or deletes.
 
-Install it in Claude Code, Cursor, Codex, Cline and other agents that support [Agent Skills](https://agentskills.io):
+Install it in Claude Code, Cursor, Codex, Cline and other agents that support [Agent Skills](https://agentskills.io). The skills CLI needs Node.js 22.20 or later:
 
 ```bash
 npx skills add repeatpost/repeatpost-mcp
 ```
 
-The skill needs the MCP server to be connected (see [Client configuration](#client-configuration)). It's listed on [skills.sh](https://skills.sh/repeatpost/repeatpost-mcp/repeatpost-social-media-manager), and it's also included in the Cursor plugin.
+Installing the skill doesn't connect RepeatPost. Add the MCP server and sign in separately (see [Client configuration](#client-configuration)). The skill is listed on [skills.sh](https://skills.sh/repeatpost/repeatpost-mcp/repeatpost-social-media-manager), and it's also included in the Cursor plugin.
+
+### GitHub Copilot
+
+GitHub Copilot supports [Agent Skills](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills) in Copilot CLI, the Copilot cloud agent, and agent mode in VS Code, Visual Studio and JetBrains IDEs. Install the skill with GitHub CLI 2.90 or later. `gh skill` is in preview, and installs for Copilot by default:
+
+```bash
+# For the current project
+gh skill install repeatpost/repeatpost-mcp repeatpost-social-media-manager
+
+# For all your projects
+gh skill install repeatpost/repeatpost-mcp repeatpost-social-media-manager --scope user
+```
+
+To review the skill before installing it, run `gh skill preview repeatpost/repeatpost-mcp repeatpost-social-media-manager`. To get later versions, run `gh skill update`. With the skills CLI, the install command is `npx skills add repeatpost/repeatpost-mcp --skill repeatpost-social-media-manager -a github-copilot`.
+
+Copilot also needs the RepeatPost MCP server. In VS Code, add it as shown under [VS Code](#vs-code), then ask Copilot in agent mode, for example *"Show my RepeatPost channels."*
+
+This is Agent Skills support: Copilot loads the skill from your installation. RepeatPost isn't listed in a GitHub or Copilot marketplace.
 
 ## Tool permissions and security
 
