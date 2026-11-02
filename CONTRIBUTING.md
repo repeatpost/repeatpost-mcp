@@ -39,6 +39,7 @@ The same check covers each `skills/<name>/SKILL.md`, which follows the [Agent Sk
 - The frontmatter `name` matches the folder name: 1-64 characters of `a-z`, `0-9` and `-`.
 - The `description` is written on one line, in at most 1024 characters. `compatibility`, if set, is at most 500 characters.
 - Every name in backticks that looks like a tool or parameter (such as `schedulePost` or `scheduledFor`) must appear in `tools.json`. When a tool or parameter is renamed or removed, update the skill in the same pull request.
+- When you change the skill, run its evals in a test workspace, as described in [`evals/README.md`](evals/README.md). When you fix a bug in it, first add an eval that reproduces the bug. `npm run validate` checks the format of the eval files, but it doesn't run them.
 
 ### Check your change
 

@@ -1,0 +1,22 @@
+[
+  {"query": "can you schedule a linkedin post for tmrw 10am saying our Q3 webinar recording is now live? use the RepeatPost company page", "should_trigger": true},
+  {"query": "What's going out on our social channels next week? I want to make sure nothing clashes with the product launch on Wednesday.", "should_trigger": true},
+  {"query": "Draft three Instagram captions with hashtags for our new oat milk latte, in our brand voice, and save the best one as a draft in RepeatPost.", "should_trigger": true},
+  {"query": "A couple of yesterday's posts failed on Facebook and Threads. Can you find out why and put them back in the queue?", "should_trigger": true},
+  {"query": "Make a square graphic announcing our 20% weekend sale in our brand colours and save it to the media library.", "should_trigger": true},
+  {"query": "delete the scheduled X post about the old pricing, we changed our prices this morning", "should_trigger": true},
+  {"query": "Post this to LinkedIn, X and Bluesky on Friday at 9am IST: \"We're hiring a senior backend engineer, details in the link\"", "should_trigger": true},
+  {"query": "How many AI credits do we have left in RepeatPost, and which LinkedIn channels are connected to our workspace?", "should_trigger": true},
+  {"query": "add our logo to the summer product photo in the media library and schedule it on instagram for saturday morning", "should_trigger": true},
+  {"query": "Switch to the Acme Client workspace and show me their posts that are waiting for approval.", "should_trigger": true},
+  {"query": "Write a 1200-word blog post for our marketing site about the best times to post on LinkedIn in 2026.", "should_trigger": false},
+  {"query": "My Next.js app's /api/social/schedule route returns a 500 when the cron job runs. Can you debug it? The stack trace is below.", "should_trigger": false},
+  {"query": "Set up a cron job on our Ubuntu server to back up the Postgres database every night at 2am.", "should_trigger": false},
+  {"query": "Use the Buffer API to queue the tweets in tweets.csv for next week, one per day at noon.", "should_trigger": false},
+  {"query": "Design a LinkedIn banner in Figma, 1584x396, using our brand colours #1574ff and #0e3de4.", "should_trigger": false},
+  {"query": "Analyse last month's Instagram engagement from instagram_export.csv and make a chart of likes per post.", "should_trigger": false},
+  {"query": "Write a Python script that posts a message to our Slack #releases channel whenever a GitHub release is published.", "should_trigger": false},
+  {"query": "what's the character limit for a linkedin post vs an X post? just roughly", "should_trigger": false},
+  {"query": "Help me write friendly replies to the angry comments on our Facebook page from this morning. I'll paste them in.", "should_trigger": false},
+  {"query": "Translate our latest press release into Spanish and French, keeping the formatting.", "should_trigger": false}
+]

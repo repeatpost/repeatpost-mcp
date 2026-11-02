@@ -24,6 +24,7 @@ const report = createReport('Metadata validation', {
   tools: 'tools.json',
   readme: 'README consistency',
   skills: 'Skills',
+  evals: 'Skill evals',
 });
 
 const SCHEMA_URL = /^https:\/\/static\.modelcontextprotocol\.io\/schemas\/[^/]+\/server\.schema\.json$/;
@@ -401,17 +402,27 @@ function frontmatter(text) {
   return { fields, body: text.slice(m[0].length) };
 }
 
-function checkSkills(tools) {
-  const dir = join(root, 'skills');
-  if (!existsSync(dir)) return [];
-  const folders = readdirSync(dir, { withFileTypes: true })
+function subfolders(dir) {
+  if (!existsSync(join(root, dir))) return [];
+  return readdirSync(join(root, dir), { withFileTypes: true })
     .filter((d) => d.isDirectory())
     .map((d) => d.name)
     .sort();
-  // Whole words anywhere in tools.json: tool names, parameters and the fields
-  // their descriptions mention. A renamed or invented tool appears nowhere.
-  const toolsText = readFileSync(join(root, 'tools.json'), 'utf8');
-  const inTools = (word) => new RegExp(`\\b${word}\\b`).test(toolsText);
+}
+
+/**
+ * Backticked camelCase names in `text` (tools, parameters, fields) that appear
+ * nowhere in tools.json as a whole word. A renamed or invented tool appears nowhere.
+ */
+let toolsText;
+function unknownToolNames(text) {
+  toolsText ??= readFileSync(join(root, 'tools.json'), 'utf8');
+  const names = [...new Set([...text.matchAll(/`([a-z]+[A-Z][A-Za-z]*)`/g)].map((m) => m[1]))];
+  return { names, unknown: names.filter((n) => !new RegExp(`\\b${n}\\b`).test(toolsText)) };
+}
+
+function checkSkills(tools) {
+  const folders = subfolders('skills');
 
   for (const folder of folders) {
     const file = `skills/${folder}/SKILL.md`;
@@ -447,9 +458,11 @@ function checkSkills(tools) {
 
     let names = [];
     if (tools) {
-      names = [...new Set([...prose(parsed.body).matchAll(/`([a-z]+[A-Z][A-Za-z]*)`/g)].map((m) => m[1]))];
-      const unknown = names.filter((n) => !inTools(n));
-      if (unknown.length) problem(`names that aren't a tool, parameter or field in tools.json: ${unknown.join(', ')}`);
+      const found = unknownToolNames(prose(parsed.body));
+      names = found.names;
+      if (found.unknown.length) {
+        problem(`names that aren't a tool, parameter or field in tools.json: ${found.unknown.join(', ')}`);
+      }
     }
 
     if (!problems) {
@@ -457,6 +470,108 @@ function checkSkills(tools) {
     }
   }
   return folders;
+}
+
+// ---- evals/<skill>/ -------------------------------------------------------
+
+// skill-creator's evals.json fields, plus `name` and `setup`.
+const EVAL_KEYS = new Set(['id', 'name', 'prompt', 'expected_output', 'files', 'expectations', 'setup']);
+const nonEmpty = (v) => typeof v === 'string' && v.trim() !== '';
+
+/** Checks evals/<skill>/evals.json and trigger-evals.json; returns counts for the summary. */
+function checkEvals(tools, skills) {
+  const counts = { behaviour: 0, trigger: 0 };
+  for (const folder of subfolders('evals')) {
+    const fail = (file, message) => report.fail('evals', `${file}: ${message}`, file);
+    const dir = `evals/${folder}`;
+    if (!skills.includes(folder)) {
+      fail(dir, `there's no skill called "${folder}" in skills/`);
+      continue;
+    }
+
+    const file = `${dir}/evals.json`;
+    if (!existsSync(join(root, file))) {
+      fail(file, 'missing; every folder in evals/ needs an evals.json');
+    } else {
+      const doc = readJson(file);
+      let problems = 0;
+      const problem = (message) => {
+        fail(file, message);
+        problems += 1;
+      };
+      if (doc && doc.skill_name !== folder) problem(`skill_name must be "${folder}", got ${JSON.stringify(doc.skill_name)}`);
+      const evals = doc?.evals;
+      if (doc && (!Array.isArray(evals) || !evals.length)) problem('needs a non-empty "evals" array');
+      if (Array.isArray(evals)) {
+        const ids = new Set();
+        const names = new Set();
+        evals.forEach((e, i) => {
+          const label = `evals[${i}]${e?.name ? ` (${e.name})` : ''}`;
+          const extra = Object.keys(e ?? {}).filter((k) => !EVAL_KEYS.has(k));
+          if (extra.length) problem(`${label}: unknown fields ${extra.join(', ')}`);
+          if (!Number.isInteger(e?.id)) problem(`${label}: id must be an integer`);
+          else if (ids.has(e.id)) problem(`${label}: id ${e.id} is used twice`);
+          else ids.add(e.id);
+          if (e?.name !== undefined) {
+            if (!nonEmpty(e.name)) problem(`${label}: name must be a non-empty string`);
+            else if (names.has(e.name)) problem(`${label}: name "${e.name}" is used twice`);
+            else names.add(e.name);
+          }
+          for (const key of ['prompt', 'expected_output']) {
+            if (!nonEmpty(e?.[key])) problem(`${label}: ${key} must be a non-empty string`);
+          }
+          if (e?.setup !== undefined && !nonEmpty(e.setup)) problem(`${label}: setup must be a non-empty string`);
+          if (!Array.isArray(e?.expectations) || !e.expectations.length || !e.expectations.every(nonEmpty)) {
+            problem(`${label}: expectations must be a non-empty list of statements`);
+          }
+          if (e?.files !== undefined) {
+            if (!Array.isArray(e.files)) problem(`${label}: files must be a list`);
+            else {
+              for (const f of e.files) {
+                if (!nonEmpty(f) || !existsSync(join(root, 'skills', folder, f))) problem(`${label}: file ${JSON.stringify(f)} doesn't exist`);
+              }
+            }
+          }
+          if (tools) {
+            const text = [e?.expected_output, e?.setup, ...(Array.isArray(e?.expectations) ? e.expectations : [])].join('\n');
+            const { unknown } = unknownToolNames(text);
+            if (unknown.length) problem(`${label}: names that aren't a tool, parameter or field in tools.json: ${unknown.join(', ')}`);
+          }
+        });
+        if (!problems) report.pass('evals', `${file}: ${evals.length} evals, each with a prompt, an expected output and expectations`);
+        counts.behaviour += evals.length;
+      }
+    }
+
+    const triggerFile = `${dir}/trigger-evals.json`;
+    if (existsSync(join(root, triggerFile))) {
+      const queries = readJson(triggerFile);
+      let problems = 0;
+      const problem = (message) => {
+        fail(triggerFile, message);
+        problems += 1;
+      };
+      if (!Array.isArray(queries) || !queries.length) problem('must be a non-empty list of {"query", "should_trigger"}');
+      else {
+        const seen = new Set();
+        queries.forEach((q, i) => {
+          const extra = Object.keys(q ?? {}).filter((k) => k !== 'query' && k !== 'should_trigger');
+          if (extra.length) problem(`[${i}]: unknown fields ${extra.join(', ')}`);
+          if (!nonEmpty(q?.query)) problem(`[${i}]: query must be a non-empty string`);
+          else if (seen.has(q.query)) problem(`[${i}]: query is listed twice`);
+          else seen.add(q.query);
+          if (typeof q?.should_trigger !== 'boolean') problem(`[${i}]: should_trigger must be true or false`);
+        });
+        const yes = queries.filter((q) => q?.should_trigger === true).length;
+        if (!yes || yes === queries.length) problem('needs both queries that should trigger the skill and queries that shouldn\'t');
+        if (!problems) {
+          report.pass('evals', `${triggerFile}: ${queries.length} queries, ${yes} that should trigger the skill and ${queries.length - yes} that shouldn't`);
+        }
+        counts.trigger += queries.length;
+      }
+    }
+  }
+  return counts;
 }
 
 // ---- run ------------------------------------------------------------------
@@ -471,6 +586,7 @@ if (server) {
 const tools = toolsDoc ? checkTools(toolsDoc) : undefined;
 const platformCount = checkReadme(tools);
 const skills = checkSkills(tools);
+const evalCounts = checkEvals(tools, skills);
 
 report.summary([
   ['Server name', server?.name ? `\`${server.name}\`` : 'unknown'],
@@ -479,6 +595,7 @@ report.summary([
   ['Unique tools', tools ? String(new Set(tools.map((t) => t?.name)).size) : 'unknown'],
   ['Supported platforms', platformCount === undefined ? 'unknown' : `${platformCount} (expected ${expected.platformCount})`],
   ['Skills', skills.length ? `${skills.length} (${skills.join(', ')})` : 'none'],
+  ['Skill evals', `${evalCounts.behaviour} behaviour, ${evalCounts.trigger} trigger`],
 ]);
 
 process.exitCode = report.failed() ? 1 : 0;
