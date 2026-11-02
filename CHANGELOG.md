@@ -8,6 +8,7 @@ The hosted server has its own version: the `version` field in [`server.json`](se
 
 ### Added
 
+- A Cursor plugin: `.cursor-plugin/plugin.json` and `mcp.json`, plus square logos on a white background in `assets/`.
 - `llms-install.md` and a Cline section in the README, for agents that set up the server themselves.
 - `SECURITY.md`, `CONTRIBUTING.md`, `SUPPORT.md` and this changelog.
 - A **Validate metadata** workflow that checks `server.json` against the official MCP Registry schema, checks `tools.json`, and checks that the README agrees with both on every push and pull request to `main`.

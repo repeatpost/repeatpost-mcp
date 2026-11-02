@@ -409,6 +409,9 @@ See [SUPPORT.md](SUPPORT.md) for what to include when you ask for help.
 | [`SUPPORT.md`](SUPPORT.md) | Where to get help |
 | [`CHANGELOG.md`](CHANGELOG.md) | Changes to this repository |
 | [`llms-install.md`](llms-install.md) | Setup instructions for AI agents that install MCP servers themselves, such as Cline |
+| [`.cursor-plugin/plugin.json`](.cursor-plugin/plugin.json) | Cursor plugin manifest for the Cursor Marketplace |
+| [`mcp.json`](mcp.json) | The server's connection settings, used by the Cursor plugin |
+| [`assets/`](assets) | Square logos on a white background, for directories that need one |
 | [`scripts/`](scripts) | Checks that keep `server.json`, `tools.json` and this README consistent |
 | [`.github/`](.github) | Workflows, issue forms and the pull request template |
 
