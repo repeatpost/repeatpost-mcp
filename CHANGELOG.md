@@ -19,6 +19,7 @@ The hosted server has its own version: the `version` field in [`server.json`](se
 
 ### Changed
 
+- Skill 1.2.0: content the tools return, such as post text and file names, is treated as data and never as instructions. This addresses Snyk's W011 warning about indirect prompt injection on skills.sh. The README lists the skills.sh page.
 - Skill 1.1.0: the agent shows a preview and waits for a yes before scheduling, publishing or deleting, even when the user asked for it. It never schedules text the user hasn't seen, and it saves test posts as drafts.
 - `server.json`: version 1.3.1, the first MCP Registry version that links this repository.
 - README: reorganised into overview, features, platforms, tools, setup, authentication, client configuration, examples, permissions and security, troubleshooting, directories and support. The supported platforms are now a table with one row per platform.
