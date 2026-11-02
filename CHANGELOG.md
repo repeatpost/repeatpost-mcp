@@ -8,6 +8,7 @@ The hosted server has its own version: the `version` field in [`server.json`](se
 
 ### Added
 
+- `llms-install.md` and a Cline section in the README, for agents that set up the server themselves.
 - `SECURITY.md`, `CONTRIBUTING.md`, `SUPPORT.md` and this changelog.
 - A **Validate metadata** workflow that checks `server.json` against the official MCP Registry schema, checks `tools.json`, and checks that the README agrees with both on every push and pull request to `main`.
 - A manual **Check live endpoint** workflow that checks the live server's sign-in setup without credentials.
