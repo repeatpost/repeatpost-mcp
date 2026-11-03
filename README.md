@@ -12,6 +12,7 @@
   <a href="https://registry.modelcontextprotocol.io/v0/servers?search=com.repeatpost/mcp"><img src="https://img.shields.io/badge/MCP_Registry-com.repeatpost%2Fmcp-2563eb" alt="MCP Registry: com.repeatpost/mcp"></a>
   <a href="https://mcp.tc/i/repeatpost"><img src="https://mcp.tc/i/repeatpost/badge.svg" alt="RepeatPost on mcp.tc"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/repeatpost/repeatpost-mcp" alt="MIT License"></a>
+  <a href="https://mcprush.com/to/repeatpost-mcp?ref=badge"><img height="20" src="https://mcprush.com/badge/repeatpost-mcp/score.svg" alt="RepeatPost MCP on mcprush" /></a>
 </p>
 
 <p align="center">
