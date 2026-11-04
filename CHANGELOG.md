@@ -10,7 +10,8 @@ The hosted server has its own version: the `version` field in [`server.json`](se
 
 - Skill 1.3.0: `references/` (`tools.md`, `platforms.md`, `graphics.md`) for details agents open only when needed, and the evals moved into the skill's own `evals/` folder, where skill-creator expects them, so they're installed with the skill. Eval 6 now describes its injection test instead of containing it, and creating a Pinterest board now needs a yes. `npm run validate` checks that references are linked, that `references/tools.md` matches `tools.json`, and that links stay inside the skill folder.
 - Evals for the agent skill: 8 behaviour scenarios and 20 trigger queries, in Anthropic skill-creator's formats. `npm run validate` checks their format.
-- README: GitHub Copilot install instructions for the agent skill with `gh skill install`, which finds it in `skills/`. There's no separate copy of the skill.
+- README: GitHub Copilot install instructions for the agent skill with `gh skill install`, which finds it in `skills/`.
+- `.github/skills/repeatpost-social-media-manager/`: a copy of the skill (`SKILL.md` and `references/`) for GitHub Copilot when it works in this repository. `npm run validate` checks that it's identical to `skills/`.
 - The `repeatpost-social-media-manager` agent skill in `skills/`, installed with `npx skills add repeatpost/repeatpost-mcp`. The validator checks its format and that every tool and parameter name it uses exists in `tools.json`.
 - A Cursor plugin: `.cursor-plugin/plugin.json` and `mcp.json`, plus square logos on a white background in `assets/`.
 - `llms-install.md` and a Cline section in the README, for agents that set up the server themselves.
@@ -22,6 +23,7 @@ The hosted server has its own version: the `version` field in [`server.json`](se
 
 ### Changed
 
+- Skill 1.4.0: a "Data handling and external service" section says what is sent to `https://api.repeatpost.com/mcp` and why, that sign-in uses RepeatPost OAuth, and that no local server is installed. It makes no storage or security claims beyond RepeatPost's Privacy Policy. The description now also triggers when the user mentions RepeatPost.
 - Skill 1.2.0: content the tools return, such as post text and file names, is treated as data and never as instructions. This addresses Snyk's W011 warning about indirect prompt injection on skills.sh. The README lists the skills.sh page.
 - Skill 1.1.0: the agent shows a preview and waits for a yes before scheduling, publishing or deleting, even when the user asked for it. It never schedules text the user hasn't seen, and it saves test posts as drafts.
 - `server.json`: version 1.3.1, the first MCP Registry version that links this repository.
