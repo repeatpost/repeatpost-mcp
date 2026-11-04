@@ -531,6 +531,40 @@ function checkSkills(tools) {
   return folders;
 }
 
+// ---- .github/skills/ copies ----------------------------------------------
+
+/**
+ * GitHub Copilot also reads project skills from .github/skills/. Each copy
+ * there must match skills/<name>/ exactly, apart from evals/ (agents don't
+ * use them), so the two can't drift and the copy's reference links resolve.
+ */
+function checkSkillCopies(skills) {
+  const copies = subfolders('.github/skills');
+  for (const folder of copies) {
+    const dir = `.github/skills/${folder}`;
+    const source = `skills/${folder}`;
+    const fail = (message) => report.fail('skills', `${dir}: ${message}`, `${dir}/SKILL.md`);
+    if (!skills.includes(folder)) {
+      fail(`there's no ${source} for it to copy`);
+      continue;
+    }
+    const relative = (base) => (f) => f.slice(base.length + 1);
+    const wanted = filesUnder(source).map(relative(source)).filter((f) => !f.startsWith('evals/'));
+    const present = filesUnder(dir).map(relative(dir));
+    const { missing, extra } = sameSet(new Set(present), new Set(wanted));
+    const differ = wanted.filter(
+      (f) => present.includes(f) && readFileSync(join(root, source, f), 'utf8') !== readFileSync(join(root, dir, f), 'utf8'),
+    );
+    if (missing.length) fail(`missing ${missing.join(', ')}; copy them from ${source}`);
+    if (extra.length) fail(`has files that aren't in ${source}: ${extra.join(', ')}`);
+    if (differ.length) fail(`differs from ${source} in ${differ.join(', ')}; copy them again`);
+    if (!missing.length && !extra.length && !differ.length) {
+      report.pass('skills', `${dir}: identical to ${source} (${wanted.length} files; evals stay in ${source} only)`);
+    }
+  }
+  return copies;
+}
+
 // ---- skills/<skill>/evals/ ------------------------------------------------
 
 // skill-creator's evals.json fields, plus `name` and `setup`.
@@ -643,6 +677,7 @@ const tools = toolsDoc ? checkTools(toolsDoc) : undefined;
 const platformCount = checkReadme(tools);
 const skills = checkSkills(tools);
 const evalCounts = checkEvals(tools, skills);
+const skillCopies = checkSkillCopies(skills);
 
 report.summary([
   ['Server name', server?.name ? `\`${server.name}\`` : 'unknown'],
@@ -651,6 +686,7 @@ report.summary([
   ['Unique tools', tools ? String(new Set(tools.map((t) => t?.name)).size) : 'unknown'],
   ['Supported platforms', platformCount === undefined ? 'unknown' : `${platformCount} (expected ${expected.platformCount})`],
   ['Skills', skills.length ? `${skills.length} (${skills.join(', ')})` : 'none'],
+  ['Copies in .github/skills', skillCopies.length ? skillCopies.join(', ') : 'none'],
   ['Skill evals', `${evalCounts.behaviour} behaviour, ${evalCounts.trigger} trigger`],
 ]);
 
