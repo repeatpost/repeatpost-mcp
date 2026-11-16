@@ -44,6 +44,24 @@ There is nothing to install or run. This repository holds the server's public me
 | **MCP Registry name** | `com.repeatpost/mcp` |
 | **Support** | [support@repeatpost.com](mailto:support@repeatpost.com) |
 
+## Explore RepeatPost on McpRush
+
+RepeatPost is published on McpRush as two listings: one for the MCP server and one for the agent skill.
+
+### RepeatPost MCP Server
+
+[RepeatPost MCP Server on McpRush](https://mcprush.com/repeatpost/repeatpost-mcp) connects AI assistants to RepeatPost's hosted MCP server. RepeatPost MCP provides 35 tools for social media management across 15 platforms, covering social media scheduling and publishing, captions, branded graphics and the media library.
+
+### RepeatPost Agent Skill
+
+[RepeatPost Social Media Manager on McpRush](https://mcprush.com/repeatpost/repeatpost-social-media-manager-2) is an AI agent skill. It gives compatible AI assistants structured instructions to create, schedule, publish and manage social media content using RepeatPost. The skill works alongside the MCP server (see [Agent skill](#agent-skill)).
+
+### Official resources
+
+- Website: [www.repeatpost.com](https://www.repeatpost.com)
+- MCP documentation: [www.repeatpost.com/mcp](https://www.repeatpost.com/mcp)
+- Agent skill on skills.sh: [skills.sh/repeatpost/repeatpost-mcp/repeatpost-social-media-manager](https://www.skills.sh/repeatpost/repeatpost-mcp/repeatpost-social-media-manager)
+
 ## Key features
 
 - **Publish to 15 platforms.** Create drafts, schedule, publish, edit and reschedule posts on any connected channel. Send one post to several channels at once as a post group, with a status for each channel and a retry for the failed ones.
@@ -422,6 +440,7 @@ RepeatPost is listed in these MCP directories:
 | Smithery | [smithery.ai/servers/info-342p/repeatpost](https://smithery.ai/servers/info-342p/repeatpost) |
 | mcp.tc | [mcp.tc/i/repeatpost](https://mcp.tc/i/repeatpost) |
 | MCPBundles | [mcpbundles.com/skills/repeatpost-mcp](https://www.mcpbundles.com/skills/repeatpost-mcp) |
+| McpRush | See [Explore RepeatPost on McpRush](#explore-repeatpost-on-mcprush) |
 | skills.sh (agent skill) | [skills.sh/repeatpost/repeatpost-mcp](https://skills.sh/repeatpost/repeatpost-mcp) |
 
 ## Support
